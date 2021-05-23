@@ -4,14 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 
-// axios.get('http://nonadventures.com/').then((response)=> {
-//     const $ = cheerio.load(response.data);
-//     console.log('callback', $('#comic img').attr('src'));
-// }).catch((error) => {
-
-// });
-
-
 async function download(url, filename){
     const writer = fs.createWriteStream(path.resolve(__dirname, filename));
     const response = await axios.get(url, {responseType: 'stream'});
@@ -47,11 +39,11 @@ async function getOrCache(url){
         try {
             let data = await getOrCache(`http://gunshowcomic.com/${i}/`);
             const $ = cheerio.load(data);
-            let src = $('#comic img').attr('src');
-            let title = $('#comic img').attr('alt')
+            let src = $('.strip').attr('src');
+            let title = $('.strip').attr('title')
             console.log(src, title);
             let parts = src.split('/');
-            //await download(src, 'images/'+parts[parts.length-1]);
+            await download(src, 'images/'+parts[parts.length-1]);
         } catch (err) {
             console.log(err);
         }
